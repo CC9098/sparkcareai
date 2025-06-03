@@ -67,7 +67,7 @@ SparkCare AI is a comprehensive, AI-powered care management system designed spec
 
 ### Prerequisites
 - Node.js 18+ and npm 9+
-- MongoDB 6.0+
+- MongoDB 6.0+ or MongoDB Atlas
 - Modern web browser (Chrome, Firefox, Safari, Edge)
 - For production: SSL certificate and domain
 
@@ -84,7 +84,12 @@ SparkCare AI is a comprehensive, AI-powered care management system designed spec
    npm run install:all
    ```
 
-3. **Configure environment variables**
+3. **Generate security keys** (for production deployment)
+   ```bash
+   npm run generate:keys
+   ```
+
+4. **Configure environment variables**
    ```bash
    cp .env.example .env
    ```
@@ -117,18 +122,18 @@ SparkCare AI is a comprehensive, AI-powered care management system designed spec
    CLIENT_URL=http://localhost:3000
    ```
 
-4. **Initialize the database**
+5. **Initialize the database**
    ```bash
    npm run migrate
    npm run seed  # Optional: Add sample data
    ```
 
-5. **Start the development server**
+6. **Start the development server**
    ```bash
    npm run dev
    ```
 
-6. **Access the application**
+7. **Access the application**
    - Care Office: http://localhost:3000
    - API Documentation: http://localhost:5000/api/docs
    - Health Check: http://localhost:5000/health
@@ -505,6 +510,40 @@ SparkCare AI is built on the insights and experiences of UK care professionals w
 
 ### Long-term Vision
 SparkCare AI aims to become the leading care management platform in the UK, setting new standards for digital care delivery while maintaining the human touch that makes care meaningful.
+
+## ☁️ Vercel Deployment
+
+### Quick Deploy to Vercel
+
+1. **準備 MongoDB Atlas 數據庫** (必需)
+   - 創建免費的 MongoDB Atlas 帳戶
+   - 設置集群並獲取連接字符串
+
+2. **生成安全密鑰**
+   ```bash
+   npm run generate:keys
+   ```
+
+3. **部署到 Vercel**
+   ```bash
+   npm i -g vercel
+   vercel login
+   vercel --prod
+   ```
+
+4. **設置環境變量**
+   在 Vercel Dashboard 中設置：
+   - `MONGODB_URI` - MongoDB Atlas 連接字符串
+   - `JWT_SECRET` - 從步驟 2 生成的密鑰
+   - `ENCRYPTION_KEY` - 從步驟 2 生成的密鑰
+   - `NODE_ENV=production`
+   - `CLIENT_URL` - 你的 Vercel 應用 URL
+
+📖 **完整的 Vercel 部署指南**: 請查看 `VERCEL_DEPLOYMENT.md`
+
+### Deploy Button
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-org/sparkcare-ai&env=MONGODB_URI,JWT_SECRET,ENCRYPTION_KEY,NODE_ENV,CLIENT_URL)
 
 ---
 

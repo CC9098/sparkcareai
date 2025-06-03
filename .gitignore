@@ -149,3 +149,4 @@ client/public/workbox-*.js
 # Local development
 .env.development
 docker-compose.override.yml
+.vercel

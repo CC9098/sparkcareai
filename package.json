@@ -15,6 +15,7 @@
     "migrate": "node server/scripts/migrate.js",
     "seed": "node server/scripts/seed.js",
     "setup": "node scripts/setup.js",
+    "generate:keys": "node scripts/generate-keys.js",
     "dev:docker": "docker-compose -f docker-compose.dev.yml up -d",
     "dev:docker:down": "docker-compose -f docker-compose.dev.yml down",
     "dev:full": "npm run dev:docker && npm run dev",

@@ -5,6 +5,7 @@ const compression = require('compression');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
+const path = require('path');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 require('dotenv').config();
@@ -101,7 +102,7 @@ app.use('/api/webhooks', webhooksRoutes);
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('client/build'));
+  app.use(express.static(path.join(__dirname, '../client/build')));
   
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
@@ -203,22 +204,25 @@ const createDefaultAdmin = async () => {
   }
 };
 
+// Connect to database when module is loaded
 connectDatabase();
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
   logger.info('SIGTERM received, shutting down gracefully');
-  server.close(() => {
-    logger.info('Process terminated');
-    mongoose.connection.close();
+  mongoose.connection.close();
+});
+
+// For Vercel serverless deployment
+if (process.env.VERCEL) {
+  module.exports = app;
+} else {
+  // For traditional server deployment
+  const PORT = process.env.PORT || 5000;
+  server.listen(PORT, () => {
+    logger.info(`SparkCare AI Server running on port ${PORT}`);
+    logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
   });
-});
-
-const PORT = process.env.PORT || 5000;
-
-server.listen(PORT, () => {
-  logger.info(`SparkCare AI Server running on port ${PORT}`);
-  logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
-});
-
-module.exports = { app, io };
+  
+  module.exports = { app, io };
+}
